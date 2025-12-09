@@ -19,8 +19,8 @@ int sensor;
 const int threshold = 100;
 //variable for motor speed
 int Motor_Speed;
-bool Fan;
-bool Light;
+int Fan;
+int Light;
 
 
 void setup() {
@@ -40,18 +40,18 @@ void loop() {
   float temperature = dht.readTemperature(true);
   float hum = dht.readHumidity();
   sensor = analogRead(sensor_pin);
-  Serial.println();
+  //Serial.println();
   delay(1000);
   if (isnan(temperature)) {
     Serial.println("Failed to read DHT sensor");
     return;
   }
 
-  Serial.println(temperature);
+  //Serial.println(temperature);
   
   //printJsonValue()
   if (sensor<threshold) {
-    Serial.println("Light Off");
+    //Serial.println("Light Off");
     Light = 0;
     if (temperature<68) {
       Motor_Speed = 0;
@@ -84,7 +84,7 @@ void loop() {
   }
 
   if (sensor>threshold) {
-    Serial.println("Light On");
+    //Serial.println("Light On");
     Light = 1;
     if (temperature<72) {
       digitalWrite(GREEN_LED, HIGH);
@@ -112,16 +112,16 @@ void loop() {
       digitalWrite(RED_LED, HIGH);
       Fan = 1;
     }
-    Serial.println(Motor_Speed);
+    //Serial.println(Motor_Speed);
   }
   JsonDocument doc;
-  doc["DeviceId"] = "Gerald_Gateway";
-  doc["Light Status"] = Light;
-  doc["Light Level"] = sensor;
+  doc["DeviceId"] = "Bob_Gateway";
+  doc["LightStatus"] = Light;
+  doc["LightLevel"] = sensor;
   doc["Temperature"] = temperature;
   doc["Humidity"] = hum;
-  doc["Fan Status"] = Fan;
-  doc["Fan Speed"] = Motor_Speed;
+  doc["FanStatus"] = Fan;
+  doc["FanSpeed"] = Motor_Speed;
   serializeJson(doc, Serial);
   delay(10000);
 }
