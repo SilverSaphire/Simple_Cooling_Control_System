@@ -40,16 +40,16 @@ void loop() {
   float temperature = dht.readTemperature(true);
   float hum = dht.readHumidity();
   sensor = analogRead(sensor_pin);
-  //Serial.println();
   delay(1000);
   if (isnan(temperature)) {
     Serial.println("Failed to read DHT sensor");
     return;
   }
-
   //Serial.println(temperature);
-  
   //printJsonValue()
+
+
+  //first threshold, when light is off
   if (sensor<threshold) {
     //Serial.println("Light Off");
     Light = 0;
@@ -80,9 +80,11 @@ void loop() {
       digitalWrite(RED_LED, HIGH);
       Fan = 1;
     }
-    Serial.println(Motor_Speed);
+    //Serial.println(Motor_Speed);
   }
 
+
+  //Second threshold (when light is on)
   if (sensor>threshold) {
     //Serial.println("Light On");
     Light = 1;
@@ -114,6 +116,8 @@ void loop() {
     }
     //Serial.println(Motor_Speed);
   }
+  
+  //Create a JSON document and record all data as key value pairs, then serialize
   JsonDocument doc;
   doc["DeviceId"] = "Bob_Gateway";
   doc["LightStatus"] = Light;
